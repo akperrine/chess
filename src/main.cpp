@@ -4,16 +4,33 @@
 int main() {
     std::cout << "Starting Chess Game\n";
 
-    auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
+    auto window = sf::RenderWindow{ { 1220u, 1080u }, "Chess Game"};
     window.setFramerateLimit(144);
 
     while (window.isOpen())
     {
-        for (auto event = sf::Event{}; window.pollEvent(event);)
-        {
-            if (event.type == sf::Event::Closed)
+        for (auto event = sf::Event{}; window.pollEvent(event);) {
+            switch (event.type) 
             {
-                window.close();
+                case sf::Event::Closed: {
+                    window.close();
+                    break;
+                }
+                case sf::Event::KeyPressed: {
+                    std::cout << "Key Press\n";
+                }
+                case sf::Event::MouseButtonPressed: {
+                    std::cout << "Clicked\n";
+                    if (event.mouseButton.button == sf::Mouse::Left)
+                    {
+                        std::cout << "the Left button was pressed" << std::endl;
+                        std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+                        std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+                    }
+                }
+                default: {
+                    break;
+                }
             }
         }
 
