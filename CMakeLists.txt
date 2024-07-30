@@ -1,23 +1,23 @@
-cmake_minimum_required(VERSION 3.13.4)
+cmake_minimum_required(VERSION 3.16)
+project(Chess LANGUAGES CXX)
 
-# Set the C++ standard specifically
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
+include(FetchContent)
+FetchContent_Declare(SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
 
-project(Chess)
+add_executable(${PROJECT_NAME}  src/main.cpp)
+target_link_libraries(${PROJECT_NAME}  PRIVATE sfml-graphics)
+target_compile_features(${PROJECT_NAME}  PRIVATE cxx_std_17)
 
-set(SFML_BUILD_GRAPHICS ON)
-set(SFML_BUILD_WINDOW ON) # Graphics depends on Window
-set(SFML_BUILD_SYSTEM ON) # Graphics and Window depend on System
-set(SFML_BUILD_AUDIO OFF)
-set(SFML_BUILD_NETWORK OFF)
-
-add_executable(${PROJECT_NAME} src/main.cpp)
-
-add_subdirectory(external/SFML)
-
-target_include_directories(${PROJECT_NAME} PRIVATE external/SFML/include)
-
-target_link_directories(${PROJECT_NAME} PRIVATE external/SFML/src/SFML/Graphics)
+if(WIN32)
+    add_custom_command(
+        TARGET ${PROJECT_NAME}
+        COMMENT "Copy OpenAL DLL"
+        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:main>
+        VERBATIM)
+endif()

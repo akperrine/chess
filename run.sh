@@ -1,1 +1,1 @@
-cd ./build; ./Chess
+cd ./build/bin; ./Chess

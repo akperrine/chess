@@ -3,9 +3,22 @@
 
 int main() {
     std::cout << "Starting Chess Game\n";
-    std::vector<int> dimensions = {100, 200};
-    // label: 
-        sf::RenderWindow(sf::VideoMode(sf::Vector2u(800, 600)), "Chess Game");
-    // sf::RenderWindow window(sf::Vector2u(800, 600)), "my window");
+
+    auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
+    window.setFramerateLimit(144);
+
+    while (window.isOpen())
+    {
+        for (auto event = sf::Event{}; window.pollEvent(event);)
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+        }
+
+        window.clear();
+        window.display();
+    }
     return 0;
 }
