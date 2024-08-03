@@ -1,4 +1,5 @@
 build/
+.vscode/
 
 #CMake related
 CMakeLists.txt.user

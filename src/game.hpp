@@ -6,11 +6,17 @@
 
 namespace chess_game {
 
-class Game : public sf::Drawable {
+class Game : public sf::Drawable{
 public :
-    Game();
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const; 
+    Game(sf::Color color_one, sf::Color color_two);
+    bool load();
+   
 private :
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+    sf::Color color_one;
+    sf::Color color_two;
+    sf::RectangleShape squares[8][8];
 };
 
 } // chess_game

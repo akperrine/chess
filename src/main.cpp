@@ -6,9 +6,11 @@ using namespace chess_game;
 int main() {
     std::cout << "Starting Chess Game\n";
 
-    auto window = sf::RenderWindow{ { 1220u, 1080u }, "Chess Game"};
+    auto window = sf::RenderWindow{ { 800u, 800u }, "Chess Game"};
     window.setFramerateLimit(144);
-    chess_game::Game chess;
+    chess_game::Game chess(sf::Color::Blue, sf::Color::White);
+    chess.load();
+
     while (window.isOpen())
     {
         for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -34,13 +36,12 @@ int main() {
                     break;
                 }
             }
-
-            sf::CircleShape shape(50.f);
-            shape.setFillColor(sf::Color(150, 50, 250));
         }
-
+        // std::cout << "about to draw\n";
         window.draw(chess);
+        // std::cout << "drawn\n";
         window.display();
     }
+
     return 0;
 }
