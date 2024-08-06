@@ -11,7 +11,9 @@ public :
     Game(sf::Color color_one, sf::Color color_two);
     bool load();
     bool is_click_on_board(const sf::Event& event) const;
-    //TODO: Draw selected piece
+    void select_piece(int x, int y);
+
+    
    
     const int X_OFFSET_DRAW = 80;
     const int Y_OFFSET_DRAW = 80;

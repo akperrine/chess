@@ -37,4 +37,11 @@ namespace chess_game {
         }
         return true;
     }
+
+    void Game::select_piece(int x_cord, int y_cord) {
+        int x_square = (x_cord - X_OFFSET_DRAW) / SQUARE_LENGTH;
+        int y_square = (y_cord - Y_OFFSET_DRAW) / SQUARE_LENGTH;
+
+        std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
+    }
 }

@@ -8,7 +8,7 @@ int main() {
     const int X_WINDOW_SIZE = 800u;
     const int Y_WINDOW_SIZE = 800u;
 
-    auto window = sf::RenderWindow{ { 800u, 800u }, "Chess Game"};
+    auto window = sf::RenderWindow{ { X_WINDOW_SIZE, Y_WINDOW_SIZE }, "Chess Game"};
     window.setFramerateLimit(144);
     chess_game::Game chess(sf::Color::Blue, sf::Color::White);
     chess.load();
@@ -30,11 +30,10 @@ int main() {
                     if (event.mouseButton.button == sf::Mouse::Left && chess.is_click_on_board(event))
                     {
                         std::cout << "the Left button was pressed" << std::endl;
-                        std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-                        std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+                        std::cout << "mouse x: " << event.mouseButton.x << '\n';
+                        std::cout << "mouse y: " << event.mouseButton.y << '\n';
 
-                        //TODO: Select a single Piece
-                        
+                        chess.select_piece(event.mouseButton.x, event.mouseButton.y);
                     }
                 }
                 default: {
