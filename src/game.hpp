@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include <SFML/Graphics.hpp>
+#include "piece.hpp"
 
 
 namespace chess_game {
@@ -21,7 +22,7 @@ public :
 private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    bool selected;
+    std::unique_ptr<Piece> selected;
     sf::Color color_one;
     sf::Color color_two;
     sf::RectangleShape chess_board[8][8];

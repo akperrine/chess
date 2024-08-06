@@ -41,9 +41,8 @@ int main() {
                 }
             }
         }
-        // std::cout << "about to draw\n";
+        
         window.draw(chess);
-        // std::cout << "drawn\n";
         window.display();
     }
 
