@@ -26,6 +26,8 @@ private :
     sf::Color color_one;
     sf::Color color_two;
     sf::RectangleShape chess_board[8][8];
+    sf::Font font;
+    sf::Text turn;
 };
 } // chess_game
 

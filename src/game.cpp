@@ -4,7 +4,14 @@
 #include <memory>
 
 namespace chess_game {
-    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), selected(std::make_unique<Piece>()) {}
+    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), selected(std::make_unique<Piece>()) {
+        font.loadFromFile("../../assets/SwanseaBold-D0ox.ttf");
+        turn.setFont(font);
+        turn.setCharacterSize(30);
+        turn.setStyle(sf::Text::Regular);
+        turn.setFillColor(sf::Color::White);
+        turn.setPosition(275.f, 30.f);
+    }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
         // this statement checks if the click is inside the board: 1. check click inside right border 2. check click inside left border 3. check above bottom border 4. check bellow top border
@@ -23,6 +30,8 @@ namespace chess_game {
                 target.draw(chess_board[i][j]);
             }
         }
+        target.draw(turn);
+
         if (selected->x != -1 && selected->y != -1) {
             sf::RectangleShape selected_square;
             selected_square.setPosition(sf::Vector2f((selected->x * SQUARE_LENGTH) + X_OFFSET_DRAW, (selected->y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
@@ -38,6 +47,7 @@ namespace chess_game {
     bool Game::load()
     {
         std::cout << "loading\n";
+        turn.setString("Turn: White");
         for (int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 chess_board[i][j].setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
