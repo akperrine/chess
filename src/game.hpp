@@ -24,7 +24,7 @@ private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     // std
-    std::unique_ptr<Square> selected;
+    // std::unique_ptr<Square> selected;
     sf::Color color_one;
     sf::Color color_two;
     Square chess_board[8][8];

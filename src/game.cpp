@@ -4,7 +4,8 @@
 #include <memory>
 
 namespace chess_game {
-    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), selected(std::make_unique<Square>()) {
+    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two) {
+    //  selected(std::make_unique<Square>())
         font.loadFromFile("../../assets/SwanseaBold-D0ox.ttf");
         turn.setFont(font);
         turn.setCharacterSize(30);
@@ -24,23 +25,31 @@ namespace chess_game {
     void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         // std::cout << "drawing\n";
         target.clear();
-
+        sf::RectangleShape selected_square;
+        int x_pos, y_pos;
          for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                target.draw(chess_board[i][j].square);
+                Square currSquare = chess_board[i][j];
+                target.draw(currSquare.square);
+                
+                if (currSquare.is_selected) {
+                    x_pos = i;
+                    y_pos = j;
+                }
+
             }
         }
+
+        selected_square.setPosition(sf::Vector2f((x_pos * SQUARE_LENGTH) + X_OFFSET_DRAW, (y_pos * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+        selected_square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
+        selected_square.setFillColor(sf::Color::Transparent);
+        selected_square.setOutlineThickness(4);
+        selected_square.setOutlineColor(sf::Color::Red);
+        target.draw(selected_square);
+        
         target.draw(turn);
 
-        if (selected->x != -1 && selected->y != -1) {
-            sf::RectangleShape selected_square;
-            selected_square.setPosition(sf::Vector2f((selected->x * SQUARE_LENGTH) + X_OFFSET_DRAW, (selected->y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
-            selected_square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
-            selected_square.setFillColor(sf::Color::Transparent);
-            selected_square.setOutlineThickness(4);
-            selected_square.setOutlineColor(sf::Color::Red);
-            target.draw(selected_square);
-        }
+        
     }
     
 
@@ -63,9 +72,25 @@ namespace chess_game {
         int y_square = (y_cord - Y_OFFSET_DRAW) / SQUARE_LENGTH;
 
         std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
-        selected->is_selected = true;
-        selected->x = x_square;
-        selected->y = y_square;
-        selected->is_selected = false;
+        // selected->is_selected = true;
+
+         for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                chess_board[i][j].is_selected = false;
+            }
+         }  
+           
+        chess_board[x_square][y_square].is_selected = true;
+        std::cout << chess_board[x_square][y_square].is_selected << '\n';
+        for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if (chess_board[x_square][y_square].is_selected == true) {
+                    std::cout << x_square << " " << y_square << '\n';
+                };
+            }
+         }  
+        // selected->x = x_square;
+        // selected->y = y_square;
+        // selected->is_selected = false;
     }
 }

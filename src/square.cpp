@@ -2,5 +2,5 @@
 #include "square.hpp"
 
 namespace chess_game {
-    Square::Square() : x(-1), y(-1) {}
+    Square::Square() : is_selected(false) {}
 }

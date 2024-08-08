@@ -2,6 +2,7 @@
 #define SQUARE_HPP
 
 #include <SFML/Graphics.hpp>
+#include "piece.hpp"
 
 namespace chess_game {
 class Square {
@@ -11,6 +12,7 @@ public :
     int y;
     bool is_selected;
     sf::RectangleShape square;
+    Piece* piece;
 private :
 
 };
