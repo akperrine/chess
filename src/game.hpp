@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "piece.hpp"
+#include "square.hpp"
 
 
 namespace chess_game {
@@ -22,10 +23,11 @@ public :
 private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    std::unique_ptr<Piece> selected;
+    // std
+    std::unique_ptr<Square> selected;
     sf::Color color_one;
     sf::Color color_two;
-    sf::RectangleShape chess_board[8][8];
+    Square chess_board[8][8];
     sf::Font font;
     sf::Text turn;
 };

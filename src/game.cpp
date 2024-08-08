@@ -4,7 +4,7 @@
 #include <memory>
 
 namespace chess_game {
-    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), selected(std::make_unique<Piece>()) {
+    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), selected(std::make_unique<Square>()) {
         font.loadFromFile("../../assets/SwanseaBold-D0ox.ttf");
         turn.setFont(font);
         turn.setCharacterSize(30);
@@ -27,7 +27,7 @@ namespace chess_game {
 
          for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                target.draw(chess_board[i][j]);
+                target.draw(chess_board[i][j].square);
             }
         }
         target.draw(turn);
@@ -50,9 +50,9 @@ namespace chess_game {
         turn.setString("Turn: White");
         for (int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                chess_board[i][j].setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
-                chess_board[i][j].setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
-                chess_board[i][j].setFillColor((i + j) % 2 ? color_one : color_two);
+                chess_board[i][j].square.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+                chess_board[i][j].square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
+                chess_board[i][j].square.setFillColor((i + j) % 2 ? color_one : color_two);
             }
         }
         return true;
