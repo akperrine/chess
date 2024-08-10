@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "piece.hpp"
 #include "square.hpp"
+#include "pawn.hpp"
 
 
 namespace chess_game {
@@ -30,6 +31,7 @@ private :
     Square chess_board[8][8];
     sf::Font font;
     sf::Text turn;
+    Pawn pawn;
 };
 } // chess_game
 

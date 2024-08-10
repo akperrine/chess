@@ -4,15 +4,13 @@
 #include <string>
 
 namespace chess_game {
-enum Color {
-    Light,
-    Dark
-};
 
 class Piece {
 public :
-    Color color;
-    Piece();
+    virtual ~Piece() = default;
+
+    bool is_light;
+    sf::Sprite piece;
     // int x;
     // int y;
 

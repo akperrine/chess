@@ -3,15 +3,18 @@
 #include <iostream>
 #include <memory>
 
+
 namespace chess_game {
-    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two) {
+    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), pawn() {
     //  selected(std::make_unique<Square>())
-        font.loadFromFile("../../assets/SwanseaBold-D0ox.ttf");
+        font.loadFromFile("../../src/assets/SwanseaBold-D0ox.ttf");
         turn.setFont(font);
         turn.setCharacterSize(30);
         turn.setStyle(sf::Text::Regular);
         turn.setFillColor(sf::Color::White);
         turn.setPosition(275.f, 30.f);
+
+        // pawn = Pawn();
     }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
@@ -46,7 +49,9 @@ namespace chess_game {
         selected_square.setOutlineThickness(4);
         selected_square.setOutlineColor(sf::Color::Red);
         target.draw(selected_square);
-        
+
+        target.draw(pawn.piece);
+
         target.draw(turn);
 
         
@@ -64,6 +69,13 @@ namespace chess_game {
                 chess_board[i][j].square.setFillColor((i + j) % 2 ? color_one : color_two);
             }
         }
+
+        // pawn.piece.setPosition(sf::Vector2f((0 * SQUARE_LENGTH) + X_OFFSET_DRAW, (0 * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+        // pawn.piece.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
+
+         pawn.piece.setPosition(400, 400);
+        pawn.piece.setColor(sf::Color(0, 255, 0)); 
+            
         return true;
     }
 
@@ -81,14 +93,14 @@ namespace chess_game {
          }  
            
         chess_board[x_square][y_square].is_selected = true;
-        std::cout << chess_board[x_square][y_square].is_selected << '\n';
-        for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                if (chess_board[x_square][y_square].is_selected == true) {
-                    std::cout << x_square << " " << y_square << '\n';
-                };
-            }
-         }  
+        // std::cout << chess_board[x_square][y_square].is_selected << '\n';
+        // for (int i = 0; i < 8; i++) {
+        //     for(int j = 0; j < 8; j++) {
+        //         if (chess_board[x_square][y_square].is_selected == true) {
+        //             std::cout << x_square << " " << y_square << '\n';
+        //         };
+        //     }
+        //  }  
         // selected->x = x_square;
         // selected->y = y_square;
         // selected->is_selected = false;
