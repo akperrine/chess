@@ -12,7 +12,7 @@ namespace chess_game {
             }    
         } else {
                 std::cout << "Entering dark Pawn constructor\n";
-                Piece::is_light = true;
+                Piece::is_light = false;
                 if (!rook_texture.loadFromFile("../../src/assets/black_pawn.png")) {
                 std::cout << "Error loading dark pawn texture\n";
             }

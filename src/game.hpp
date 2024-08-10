@@ -29,7 +29,8 @@ private :
     sf::Color color_two;
     Square chess_board[8][8];
     sf::Font font;
-    sf::Text turn;
+    sf::Text turn_text;
+    bool is_light_turn;
     std::vector<std::unique_ptr<Pawn>> pawns;
 };
 } // chess_game

@@ -8,11 +8,12 @@ namespace chess_game {
     Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two) {
     //  selected(std::make_unique<Square>())
         font.loadFromFile("../../src/assets/SwanseaBold-D0ox.ttf");
-        turn.setFont(font);
-        turn.setCharacterSize(30);
-        turn.setStyle(sf::Text::Regular);
-        turn.setFillColor(sf::Color::White);
-        turn.setPosition(275.f, 30.f);
+        turn_text.setFont(font);
+        turn_text.setCharacterSize(30);
+        turn_text.setStyle(sf::Text::Regular);
+        turn_text.setFillColor(sf::Color::White);
+        turn_text.setPosition(275.f, 30.f);
+        is_light_turn = true;
 
         // initiate light pawns on board
         for (int i = 0; i < 8; ++i) {
@@ -62,7 +63,7 @@ namespace chess_game {
         target.draw(selected_square);
 
 
-        target.draw(turn);
+        target.draw(turn_text);
 
         
     }
@@ -71,7 +72,12 @@ namespace chess_game {
     bool Game::load()
     {
         std::cout << "loading\n";
-        turn.setString("Turn: White");
+        if (is_light_turn) {
+            turn_text.setString("Turn: Light");
+        } else {
+            turn_text.setString("Turn: Dark");
+        }
+
         for (int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 chess_board[i][j].square.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
@@ -107,8 +113,10 @@ namespace chess_game {
                 chess_board[i][j].is_selected = false;
             }
          }  
-           
-        chess_board[x_square][y_square].is_selected = true;
+        Square& chosen_square = chess_board[x_square][y_square];
+        if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
+            chess_board[x_square][y_square].is_selected = true;
+        }   
         // std::cout << chess_board[x_square][y_square].is_selected << '\n';
         // for (int i = 0; i < 8; i++) {
         //     for(int j = 0; j < 8; j++) {
