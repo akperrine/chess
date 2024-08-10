@@ -5,8 +5,8 @@ using namespace chess_game;
 
 int main() {
     std::cout << "Starting Chess Game\n";
-    const int X_WINDOW_SIZE = 800u;
-    const int Y_WINDOW_SIZE = 800u;
+    const int X_WINDOW_SIZE = 650u;
+    const int Y_WINDOW_SIZE = 650u;
 
     auto window = sf::RenderWindow{ { X_WINDOW_SIZE, Y_WINDOW_SIZE }, "Chess Game"};
     window.setFramerateLimit(144);

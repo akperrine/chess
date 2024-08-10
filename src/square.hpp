@@ -8,11 +8,14 @@ namespace chess_game {
 class Square {
 public :
     Square();
+    Square(const Square&) = delete;  // Delete copy constructor
+    Square& operator=(const Square&) = delete; 
+
     int x;
     int y;
     bool is_selected;
     sf::RectangleShape square;
-    Piece* piece;
+    std::unique_ptr<Piece> piece;
 private :
 
 };

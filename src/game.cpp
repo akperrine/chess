@@ -5,7 +5,7 @@
 
 
 namespace chess_game {
-    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two), pawn() {
+    Game::Game(sf::Color color_one, sf::Color color_two) : color_one(color_one), color_two(color_two) {
     //  selected(std::make_unique<Square>())
         font.loadFromFile("../../src/assets/SwanseaBold-D0ox.ttf");
         turn.setFont(font);
@@ -15,6 +15,13 @@ namespace chess_game {
         turn.setPosition(275.f, 30.f);
 
         // pawn = Pawn();
+        for (int i = 0; i < 8; ++i) {
+        auto pawn = std::make_unique<Pawn>();  // Create a new Pawn
+        pawns.push_back(std::move(pawn));  // Move it into the vector
+
+        // Place the pawn in the board
+        chess_board[i][1].piece = std::move(pawns.back());  // Assign the Pawn to the square
+     }
     }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
@@ -32,7 +39,7 @@ namespace chess_game {
         int x_pos, y_pos;
          for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Square currSquare = chess_board[i][j];
+                const Square& currSquare = chess_board[i][j];
                 target.draw(currSquare.square);
                 
                 if (currSquare.is_selected) {
@@ -40,6 +47,9 @@ namespace chess_game {
                     y_pos = j;
                 }
 
+                if (currSquare.piece) {
+                target.draw(currSquare.piece->piece);  // Draw the piece if it exists
+                }
             }
         }
 
@@ -50,7 +60,6 @@ namespace chess_game {
         selected_square.setOutlineColor(sf::Color::Red);
         target.draw(selected_square);
 
-        target.draw(pawn.piece);
 
         target.draw(turn);
 
@@ -67,14 +76,20 @@ namespace chess_game {
                 chess_board[i][j].square.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
                 chess_board[i][j].square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
                 chess_board[i][j].square.setFillColor((i + j) % 2 ? color_one : color_two);
+
+                if (chess_board[i][j].piece) {
+                    chess_board[i][j].piece->piece.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));;  
+                    chess_board[i][j].piece->piece.setScale(1.0, 1.0);
+                }
             }
+
         }
 
         // pawn.piece.setPosition(sf::Vector2f((0 * SQUARE_LENGTH) + X_OFFSET_DRAW, (0 * SQUARE_LENGTH) + Y_OFFSET_DRAW));
         // pawn.piece.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
 
-         pawn.piece.setPosition(400, 400);
-        pawn.piece.setColor(sf::Color(0, 255, 0)); 
+        //  pawn.piece.setPosition(400, 400);
+        // pawn.piece.setColor(sf::Color(0, 255, 0)); 
             
         return true;
     }
