@@ -8,6 +8,7 @@ namespace chess_game {
 class Square {
 public :
     Square();
+    // not sure if these delete constructors are necessary
     Square(const Square&) = delete;  // Delete copy constructor
     Square& operator=(const Square&) = delete; 
 

@@ -9,11 +9,11 @@ namespace chess_game {
 
 class Pawn : public Piece {
 public :
-    Pawn();
+    Pawn(bool is_light);
     // void set_sprite();
     
-    sf::Texture dark_rook_texture;
-    sf::Texture light_rook_texture;
+    bool is_light;
+    sf::Texture rook_texture;
 private :
 
 };

@@ -10,7 +10,7 @@ int main() {
 
     auto window = sf::RenderWindow{ { X_WINDOW_SIZE, Y_WINDOW_SIZE }, "Chess Game"};
     window.setFramerateLimit(144);
-    chess_game::Game chess(sf::Color::Blue, sf::Color::White);
+    chess_game::Game chess(sf::Color(209, 148, 155), sf::Color(217, 217, 217));
     chess.load();
 
     while (window.isOpen())

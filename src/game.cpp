@@ -14,14 +14,15 @@ namespace chess_game {
         turn.setFillColor(sf::Color::White);
         turn.setPosition(275.f, 30.f);
 
-        // pawn = Pawn();
+        // initiate light pawns on board
         for (int i = 0; i < 8; ++i) {
-        auto pawn = std::make_unique<Pawn>();  // Create a new Pawn
-        pawns.push_back(std::move(pawn));  // Move it into the vector
+            chess_board[i][1].piece = std::make_unique<Pawn>(true);
+        }
 
-        // Place the pawn in the board
-        chess_board[i][1].piece = std::move(pawns.back());  // Assign the Pawn to the square
-     }
+        //initiate dark pawns on board
+        for (int i = 0; i < 8; ++i) {
+            chess_board[i][6].piece = std::make_unique<Pawn>(false);  // Assign the 
+        }
     }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
