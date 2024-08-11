@@ -20,5 +20,11 @@ namespace chess_game {
         std::cout << "Creating class";
         // rook_texture.loadFromFile("../../src/assets/white_pawn.png");
         piece.setTexture(rook_texture);
-    };
+    }
+
+    std::vector<std::pair<int, int>> Pawn::get_moves(int x, int y) const {
+        return std::vector<std::pair<int, int>>();
+    }
+
+    
 }

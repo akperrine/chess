@@ -2,4 +2,5 @@
 #include "piece.hpp"
 
 namespace chess_game {
+
 }

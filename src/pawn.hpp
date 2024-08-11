@@ -10,10 +10,8 @@ namespace chess_game {
 class Pawn : public Piece {
 public :
     Pawn(bool is_light);
-    // void set_sprite();
-    //TODO: check if can remove this is_light
-    //TODO: put logic to check click on piece if color correct
-    bool is_light;
+    std::vector<std::pair<int, int>> get_moves(int x, int y) const override;
+  
     sf::Texture rook_texture;
 private :
 
