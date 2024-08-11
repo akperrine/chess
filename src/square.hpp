@@ -5,6 +5,7 @@
 #include "piece.hpp"
 
 namespace chess_game {
+class Piece;    
 class Square {
 public :
     Square();
