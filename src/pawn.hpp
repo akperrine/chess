@@ -11,7 +11,9 @@ namespace chess_game {
 class Pawn : public Piece {
 public :
     Pawn(bool is_light);
-    std::vector<std::pair<int, int>> get_moves(Square board[8][8], int x, int y) const;
+    std::vector<std::pair<int, int>> get_moves(Square board[8][8], int x, int y) ;
+     std::vector<std::pair<int, int>> possible_moves;
+
   
     sf::Texture rook_texture;
     bool first_move;

@@ -11,9 +11,9 @@ class Square;
 class Piece {
 public :
     virtual ~Piece() = default;
-    virtual std::vector<std::pair<int, int>> get_moves(Square board[8][8], int x, int y) const = 0;
+    virtual std::vector<std::pair<int, int>> get_moves(Square board[8][8], int x, int y) = 0;
 
-    std::vector<std::pair<int, int>> possible_moves;
+    // std::vector<std::pair<int, int>> possible_moves;
     bool is_light;
     sf::Sprite piece;
 private :

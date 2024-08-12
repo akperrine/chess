@@ -22,7 +22,14 @@ namespace chess_game {
         piece.setTexture(rook_texture);
     }
 
-    std::vector<std::pair<int, int>> Pawn::get_moves(Square board[8][8], int x, int y) const {
+    std::vector<std::pair<int, int>> Pawn::get_moves(Square board[8][8], int x, int y)  {
+        if (is_light) {
+            if (first_move) {
+                //TODO:
+            }
+
+            // possible_moves.push_back(std::make_pair(x, y));
+        }
         return std::vector<std::pair<int, int>>();
     }
 
