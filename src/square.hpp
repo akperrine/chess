@@ -16,6 +16,7 @@ public :
     int x;
     int y;
     bool is_selected;
+    bool is_possible_move;
     sf::RectangleShape square;
     std::unique_ptr<Piece> piece;
 private :

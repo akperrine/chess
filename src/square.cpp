@@ -3,5 +3,5 @@
 #include "piece.hpp"
 
 namespace chess_game {
-    Square::Square() : is_selected(false) {}
+    Square::Square() : is_selected(false), is_possible_move(false) {}
 }

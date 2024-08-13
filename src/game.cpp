@@ -55,12 +55,22 @@ namespace chess_game {
             }
         }
 
+        for (std::pair<int, int> pair : possible_moves) {
+            sf::RectangleShape  temp_rec;
+            temp_rec.setPosition(sf::Vector2f((pair.first * SQUARE_LENGTH) + X_OFFSET_DRAW, (pair.second * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+            temp_rec.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
+            temp_rec.setFillColor(sf::Color(67, 17, 43, 128));
+            target.draw(temp_rec);
+        }
+
         selected_square.setPosition(sf::Vector2f((x_pos * SQUARE_LENGTH) + X_OFFSET_DRAW, (y_pos * SQUARE_LENGTH) + Y_OFFSET_DRAW));
         selected_square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
         selected_square.setFillColor(sf::Color::Transparent);
         selected_square.setOutlineThickness(4);
         selected_square.setOutlineColor(sf::Color::Red);
         target.draw(selected_square);
+
+     
 
 
         target.draw(turn_text);
@@ -74,7 +84,7 @@ namespace chess_game {
         std::cout << "loading\n";
         if (is_light_turn) {
             turn_text.setString("Turn: Light");
-        } else {
+    } else {
             turn_text.setString("Turn: Dark");
         }
 
@@ -84,19 +94,14 @@ namespace chess_game {
                 chess_board[i][j].square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
                 chess_board[i][j].square.setFillColor((i + j) % 2 ? color_one : color_two);
 
+                // draw chess pieces if piece present
                 if (chess_board[i][j].piece) {
-                    chess_board[i][j].piece->piece.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));;  
+                    chess_board[i][j].piece->piece.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
                     chess_board[i][j].piece->piece.setScale(1.0, 1.0);
                 }
             }
 
-        }
-
-        // pawn.piece.setPosition(sf::Vector2f((0 * SQUARE_LENGTH) + X_OFFSET_DRAW, (0 * SQUARE_LENGTH) + Y_OFFSET_DRAW));
-        // pawn.piece.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
-
-        //  pawn.piece.setPosition(400, 400);
-        // pawn.piece.setColor(sf::Color(0, 255, 0)); 
+        } 
             
         return true;
     }
@@ -107,7 +112,7 @@ namespace chess_game {
 
         std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
         // selected->is_selected = true;
-
+        possible_moves.clear();
          for (int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 chess_board[i][j].is_selected = false;
@@ -116,17 +121,11 @@ namespace chess_game {
         Square& chosen_square = chess_board[x_square][y_square];
         if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
             chess_board[x_square][y_square].is_selected = true;
+            
+                    std::cout<< "this is possible \n";
+                    // Game::possible_moves.push_back(std::make_pair(x_square, y_square));
+                
+            possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
         }   
-        // std::cout << chess_board[x_square][y_square].is_selected << '\n';
-        // for (int i = 0; i < 8; i++) {
-        //     for(int j = 0; j < 8; j++) {
-        //         if (chess_board[x_square][y_square].is_selected == true) {
-        //             std::cout << x_square << " " << y_square << '\n';
-        //         };
-        //     }
-        //  }  
-        // selected->x = x_square;
-        // selected->y = y_square;
-        // selected->is_selected = false;
     }
 }

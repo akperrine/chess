@@ -31,7 +31,9 @@ private :
     sf::Font font;
     sf::Text turn_text;
     bool is_light_turn;
+    std::vector<std::pair<int, int>> possible_moves;
     std::vector<std::unique_ptr<Pawn>> pawns;
+
 };
 } // chess_game
 
