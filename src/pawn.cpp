@@ -26,20 +26,34 @@ namespace chess_game {
         std::vector<std::pair<int, int>> moves = std::vector<std::pair<int, int>>();
         if (is_light) {
             if (first_move) {
-                //TODO:
+                if(!board[x][y+2].piece && !board[x][y+1].piece) {
                  moves.push_back(std::make_pair(x, y+2));
+                }
             }
-            std::cout<< "loading moves\n";
-            
-            moves.push_back(std::make_pair(x, y+1));
+            if(!board[x][y+1].piece) {
+                moves.push_back(std::make_pair(x, y+1));
+            }
+            if(x+1 < 8 && board[x +1][y+1].piece && board[x +1][y+1].piece->is_light == false) {
+                moves.push_back(std::make_pair(x+1, y+1));
+            } 
+            if(x-1 >= 0 && board[x -1][y+1].piece && board[x -1][y+1].piece->is_light == false) {
+                moves.push_back(std::make_pair(x-1, y+1));
+            } 
         } else {
             if (first_move) {
-                //TODO:
+                if(!board[x][y-2].piece && !board[x][y-1].piece) {
                  moves.push_back(std::make_pair(x, y-2));
+                }
             }
-            std::cout<< "loading moves\n";
-            
-            moves.push_back(std::make_pair(x, y-1));
+            if(!board[x][y-1].piece) {
+                moves.push_back(std::make_pair(x, y-1));
+            }
+            if(x+1 < 8 && board[x +1][y-1].piece && board[x +1][y-1].piece->is_light == true) {
+                moves.push_back(std::make_pair(x+1, y-1));
+            } 
+            if(x-1 >= 0 && board[x -1][y-1].piece && board[x -1][y-1].piece->is_light == true) {
+                moves.push_back(std::make_pair(x-1, y-1));
+            } 
         }
         return moves;
     }

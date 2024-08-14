@@ -13,16 +13,17 @@ namespace chess_game {
         turn_text.setStyle(sf::Text::Regular);
         turn_text.setFillColor(sf::Color::White);
         turn_text.setPosition(275.f, 30.f);
-        is_light_turn = true;
+        is_light_turn = false;
 
         // initiate light pawns on board
         for (int i = 0; i < 8; ++i) {
             chess_board[i][1].piece = std::make_unique<Pawn>(true);
         }
+        chess_board[0][2].piece = std::make_unique<Pawn>(false);
 
         //initiate dark pawns on board
         for (int i = 0; i < 8; ++i) {
-            chess_board[i][6].piece = std::make_unique<Pawn>(false);  // Assign the 
+            chess_board[i][3].piece = std::make_unique<Pawn>(false);  // Assign the 
         }
     }
 
