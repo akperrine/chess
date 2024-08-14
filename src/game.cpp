@@ -112,13 +112,32 @@ namespace chess_game {
         int y_square = (y_cord - Y_OFFSET_DRAW) / SQUARE_LENGTH;
 
         std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
-        // selected->is_selected = true;
+        
+        // needs to be refactored
+        std::pair<int,int> selected;
+         for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {  
+                if(chess_board[i][j].is_selected) {
+                    selected.first = i;
+                    selected.second = j;
+                }
+            }
+         }  
+        
+        std::pair<int, int> target_move = {x_square, y_square};
+        auto movable_square = std::find(possible_moves.begin(), possible_moves.end(), target_move);
+        if(movable_square != possible_moves.end()) {
+            std::cout<< "found move\n";
+            move_piece(target_move, selected);
+        }
+
         possible_moves.clear();
          for (int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 chess_board[i][j].is_selected = false;
             }
          }  
+
         Square& chosen_square = chess_board[x_square][y_square];
         if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
             chess_board[x_square][y_square].is_selected = true;
@@ -128,5 +147,13 @@ namespace chess_game {
                 
             possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
         }   
+    }
+
+    void Game::move_piece(std::pair<int,int> from_square, std::pair<int,int> to_square) {
+        std::cout<< "moving from "<< from_square.first << " " << from_square.second << " to " <<to_square.first << " " << to_square.second << "\n";
+    }
+
+    bool Game::check_if_check() {
+        return false;
     }
 }

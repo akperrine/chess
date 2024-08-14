@@ -29,7 +29,6 @@ int main() {
                     std::cout << "Clicked\n";
                     if (event.mouseButton.button == sf::Mouse::Left && chess.is_click_on_board(event))
                     {
-                        std::cout << "the Left button was pressed" << std::endl;
                         std::cout << "mouse x: " << event.mouseButton.x << '\n';
                         std::cout << "mouse y: " << event.mouseButton.y << '\n';
 
