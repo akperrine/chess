@@ -85,7 +85,7 @@ namespace chess_game {
         std::cout << "loading\n";
         if (is_light_turn) {
             turn_text.setString("Turn: Light");
-    } else {
+        } else {
             turn_text.setString("Turn: Dark");
         }
 
@@ -177,6 +177,11 @@ namespace chess_game {
             desitination_square.piece = std::move(backupPiece);
         }
         is_light_turn = !is_light_turn;
+        if (is_light_turn) {
+            turn_text.setString("Turn: Light");
+        } else {
+            turn_text.setString("Turn: Dark");
+        }
     }
 
     bool Game::check_if_check() {
