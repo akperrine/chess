@@ -94,7 +94,8 @@ namespace chess_game {
                 chess_board[i][j].square.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
                 chess_board[i][j].square.setSize(sf::Vector2f(SQUARE_LENGTH, SQUARE_LENGTH));
                 chess_board[i][j].square.setFillColor((i + j) % 2 ? color_one : color_two);
-
+                chess_board[i][j].x = i;
+                chess_board[i][j].y = j;
                 // draw chess pieces if piece present
                 if (chess_board[i][j].piece) {
                     chess_board[i][j].piece->piece.setPosition(sf::Vector2f((i * SQUARE_LENGTH) + X_OFFSET_DRAW, (j * SQUARE_LENGTH) + Y_OFFSET_DRAW));
@@ -128,8 +129,16 @@ namespace chess_game {
         auto movable_square = std::find(possible_moves.begin(), possible_moves.end(), target_move);
         if(movable_square != possible_moves.end()) {
             std::cout<< "found move\n";
-            move_piece(target_move, selected);
+            move_piece(selected, target_move);
+
+            possible_moves.clear();
+         for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                chess_board[i][j].is_selected = false;
+            }
+         }  
         }
+        //  else {
 
         possible_moves.clear();
          for (int i = 0; i < 8; i++) {
@@ -147,10 +156,27 @@ namespace chess_game {
                 
             possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
         }   
+        // }
     }
 
-    void Game::move_piece(std::pair<int,int> from_square, std::pair<int,int> to_square) {
-        std::cout<< "moving from "<< from_square.first << " " << from_square.second << " to " <<to_square.first << " " << to_square.second << "\n";
+    void Game::move_piece(std::pair<int,int> from_coords, std::pair<int,int> to_coords) {
+        std::cout<< "moving from "<< from_coords.first << " " << from_coords.second << " to " <<to_coords.first << " " << to_coords.second << "\n";
+
+        Square& start_square = chess_board[from_coords.first][from_coords.second];
+        Square& desitination_square = chess_board[to_coords.first][to_coords.second];
+
+        std::unique_ptr<Piece> backupPiece = std::move(desitination_square.piece);
+        std::cout<< start_square.piece->is_light <<'\n';
+        desitination_square.piece = std::move(start_square.piece);
+        std::cout<< desitination_square.x << " " << desitination_square.y << "\n";
+        desitination_square.piece->piece.setPosition(sf::Vector2f((desitination_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, (desitination_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+        // start_square.piece.reset();
+        bool is_check = check_if_check();
+        if(is_check) {
+            start_square.piece = std::move(desitination_square.piece);
+            desitination_square.piece = std::move(backupPiece);
+        }
+        is_light_turn = !is_light_turn;
     }
 
     bool Game::check_if_check() {
