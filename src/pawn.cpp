@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace chess_game {
-    Pawn::Pawn(bool is_light) : first_move(true) {
+    Pawn::Pawn(bool is_light) {
         if (is_light) {
             std::cout << "Entering lightPawn constructor\n";
             Piece::is_light = true;
@@ -25,7 +25,7 @@ namespace chess_game {
     std::vector<std::pair<int, int>> Pawn::get_moves(Square board[8][8], int x, int y)  {
         std::vector<std::pair<int, int>> moves = std::vector<std::pair<int, int>>();
         if (is_light) {
-            if (first_move) {
+            if (y == 1) {
                 if(!board[x][y+2].piece && !board[x][y+1].piece) {
                  moves.push_back(std::make_pair(x, y+2));
                 }
@@ -40,7 +40,7 @@ namespace chess_game {
                 moves.push_back(std::make_pair(x-1, y+1));
             } 
         } else {
-            if (first_move) {
+            if (y == 6) {
                 if(!board[x][y-2].piece && !board[x][y-1].piece) {
                  moves.push_back(std::make_pair(x, y-2));
                 }

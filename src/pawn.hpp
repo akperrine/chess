@@ -16,7 +16,6 @@ public :
 
   
     sf::Texture rook_texture;
-    bool first_move;
 private :
 
 };
