@@ -5,6 +5,7 @@
 #include "piece.hpp"
 #include "square.hpp"
 #include "pawn.hpp"
+#include "king.hpp"
 
 
 namespace chess_game {
@@ -17,7 +18,6 @@ public :
     void select_piece(int x, int y);
 
     
-   
     const int X_OFFSET_DRAW = 70;
     const int Y_OFFSET_DRAW = 90;
     float const SQUARE_LENGTH = 65.0f;
@@ -27,7 +27,6 @@ private :
     void undo_move();
     bool check_if_check();
 
-    // std
     sf::Color color_one;
     sf::Color color_two;
     Square chess_board[8][8];

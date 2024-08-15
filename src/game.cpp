@@ -23,8 +23,10 @@ namespace chess_game {
 
         //initiate dark pawns on board
         for (int i = 0; i < 8; ++i) {
-            chess_board[i][3].piece = std::make_unique<Pawn>(false);  // Assign the 
+            chess_board[i][4].piece = std::make_unique<Pawn>(false);  
         }
+        chess_board[4][3].piece = std::make_unique<King>(false);
+
     }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
