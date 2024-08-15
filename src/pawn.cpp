@@ -24,7 +24,7 @@ namespace chess_game {
 
     std::vector<std::pair<int, int>> Pawn::get_moves(Square board[8][8], int x, int y)  {
         std::vector<std::pair<int, int>> moves = std::vector<std::pair<int, int>>();
-        if (is_light) {
+        if (is_light && y != 7) {
             if (y == 1) {
                 if(!board[x][y+2].piece && !board[x][y+1].piece) {
                  moves.push_back(std::make_pair(x, y+2));
@@ -39,7 +39,7 @@ namespace chess_game {
             if(x-1 >= 0 && board[x -1][y+1].piece && board[x -1][y+1].piece->is_light == false) {
                 moves.push_back(std::make_pair(x-1, y+1));
             } 
-        } else {
+        } else if (y != 0) {
             if (y == 6) {
                 if(!board[x][y-2].piece && !board[x][y-1].piece) {
                  moves.push_back(std::make_pair(x, y-2));
