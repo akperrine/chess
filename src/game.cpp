@@ -171,13 +171,14 @@ namespace chess_game {
         std::cout<< start_square.piece->is_light <<'\n';
         desitination_square.piece = std::move(start_square.piece);
         std::cout<< desitination_square.x << " " << desitination_square.y << "\n";
-        desitination_square.piece->piece.setPosition(sf::Vector2f((desitination_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, (desitination_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
         // start_square.piece.reset();
         bool is_check = check_if_check();
         if(is_check) {
             start_square.piece = std::move(desitination_square.piece);
             desitination_square.piece = std::move(backupPiece);
-        }
+            return;
+        } 
+        desitination_square.piece->piece.setPosition(sf::Vector2f((desitination_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, (desitination_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
         is_light_turn = !is_light_turn;
         if (is_light_turn) {
             turn_text.setString("Turn: Light");
@@ -187,6 +188,33 @@ namespace chess_game {
     }
 
     bool Game::check_if_check() {
-        return false;
+        std::pair<int,int> king_coords;
+        possible_moves.clear();
+
+        for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if (chess_board[i][j].piece && chess_board[i][j].piece->is_light == is_light_turn && dynamic_cast<King*>(chess_board[i][j].piece.get())){
+                    king_coords.first = i;
+                    king_coords.second = j;
+                }
+                if (chess_board[i][j].piece && chess_board[i][j].piece->is_light != is_light_turn) {
+                    auto piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
+                    possible_moves.insert(possible_moves.end(), piece_moves.begin(),piece_moves.end());
+                }
+            }
+         }  
+                for (auto i : possible_moves) {
+                    std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
+                    if(i == king_coords) {
+                        std::cout<< "check\n";
+                        possible_moves.clear();
+                        return true;
+                    }
+                    
+                }
+
+                std::cout<< "not check\n";
+        possible_moves.clear();
+         return false;
     }
 }
