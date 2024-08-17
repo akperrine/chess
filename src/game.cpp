@@ -20,14 +20,14 @@ namespace chess_game {
         dark_right_castle = true;
 
         // initialize light pawns on board
-        for (int i = 0; i < 8; ++i) {
-            chess_board[i][1].piece = std::make_unique<Pawn>(true);
-        }
+        // for (int i = 0; i < 8; ++i) {
+        //     chess_board[i][1].piece = std::make_unique<Pawn>(true);
+        // }
 
         //initialize dark pawns on board
-        for (int i = 0; i < 8; ++i) {
-            chess_board[i][6].piece = std::make_unique<Pawn>(false);  
-        }
+        // for (int i = 0; i < 8; ++i) {
+        //     chess_board[i][6].piece = std::make_unique<Pawn>(false);  
+        // }
         // testing pawns
         chess_board[1][6].piece = std::make_unique<Pawn>(true);
         chess_board[6][2].piece = std::make_unique<Pawn>(false);
@@ -176,6 +176,7 @@ namespace chess_game {
                 
             possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
         }   
+        check_for_castle(target_move);
         // }
     }
 
@@ -196,14 +197,14 @@ namespace chess_game {
             desitination_square.piece = std::move(backupPiece);
             return;
         } else {
-            address_moved_castle_pieces(from_coords);
+            check_moved_castle_pieces(from_coords);
         }
         pawn_to_queen(to_coords);
 
-        std::cout<< "left light castle: " << light_left_castle<<"\n";
-        std::cout<< "right light castle: " << light_right_castle<<"\n";
-        std::cout<< "left dark castle: " << dark_left_castle<<"\n";
-        std::cout<< "right dark castle: " << dark_right_castle<<"\n";
+        // std::cout<< "left light castle: " << light_left_castle<<"\n";
+        // std::cout<< "right light castle: " << light_right_castle<<"\n";
+        // std::cout<< "left dark castle: " << dark_left_castle<<"\n";
+        // std::cout<< "right dark castle: " << dark_right_castle<<"\n";
 
 
 
@@ -267,17 +268,29 @@ namespace chess_game {
     }
 
     bool Game::check_for_castle(std::pair<int,int> selected_piece) {
-        std::cout<<"not castle\n";
+        std::cout<<"check castle\n";
         Square& selected_square = chess_board[selected_piece.first][selected_piece.second];
         
         // check if king in selected square
         if (selected_square.piece && dynamic_cast<King*>(selected_square.piece.get())) {
-            // if (selected_square.piece->is_light && light_left_castle)
+            std::cout<<"is King\n";
+            if (selected_square.piece->is_light && light_left_castle) {
+                std::cout<< "viable light left castle\n";
+            }
+            if (selected_square.piece->is_light && light_right_castle) {
+                std::cout<< "viable light right castle\n";
+            }
+            if (!selected_square.piece->is_light && dark_left_castle) {
+                std::cout<< "viable dark left castle\n";
+            }
+            if (!selected_square.piece->is_light && dark_right_castle) {
+                std::cout<< "viable dark right castle\n";
+            }
         }
         return false;
     }
 
-    void Game::address_moved_castle_pieces(std::pair<int,int> from_coords) {
+    void Game::check_moved_castle_pieces(std::pair<int,int> from_coords) {
         if (from_coords.second == 0) {
             if(from_coords.first == 4) {
                 light_left_castle = false;

@@ -29,7 +29,7 @@ private :
     bool check_if_check();
     void pawn_to_queen(std::pair<int,int> new_pieces_square);
     bool check_for_castle(std::pair<int,int> selected_piece);
-    void address_moved_castle_pieces(std::pair<int,int> from_coords);
+    void check_moved_castle_pieces(std::pair<int,int> from_coords);
 
     sf::Color color_one;
     sf::Color color_two;
