@@ -10,7 +10,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(${PROJECT_NAME}  src/main.cpp src/game.cpp src/piece.cpp src/square.cpp src/pawn.cpp src/king.cpp src/queen.cpp)
+add_executable(${PROJECT_NAME}  src/main.cpp src/game.cpp src/piece.cpp src/square.cpp src/pawn.cpp src/king.cpp src/queen.cpp src/rook.cpp)
 target_link_libraries(${PROJECT_NAME}  PRIVATE sfml-graphics)
 target_compile_features(${PROJECT_NAME}  PRIVATE cxx_std_17)
 

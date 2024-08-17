@@ -14,17 +14,30 @@ namespace chess_game {
         turn_text.setFillColor(sf::Color::White);
         turn_text.setPosition(275.f, 30.f);
         is_light_turn = false;
+        light_left_castle = true;
+        light_right_castle = true;
+        dark_left_castle = true;
+        dark_right_castle = true;
 
         // initialize light pawns on board
         for (int i = 0; i < 8; ++i) {
             chess_board[i][1].piece = std::make_unique<Pawn>(true);
         }
-        chess_board[0][2].piece = std::make_unique<Pawn>(false);
 
         //initialize dark pawns on board
         for (int i = 0; i < 8; ++i) {
             chess_board[i][6].piece = std::make_unique<Pawn>(false);  
         }
+        // testing pawns
+        chess_board[1][6].piece = std::make_unique<Pawn>(true);
+        chess_board[6][2].piece = std::make_unique<Pawn>(false);
+
+        // initialize rooks on board
+        chess_board[0][0].piece = std::make_unique<Rook>(true);
+        chess_board[7][0].piece = std::make_unique<Rook>(true);
+        chess_board[0][7].piece = std::make_unique<Rook>(false);
+        chess_board[7][7].piece = std::make_unique<Rook>(false);
+
         // initialize kings on board
         chess_board[4][0].piece = std::make_unique<King>(true);
         chess_board[4][7].piece = std::make_unique<King>(false);
@@ -182,7 +195,18 @@ namespace chess_game {
             start_square.piece = std::move(desitination_square.piece);
             desitination_square.piece = std::move(backupPiece);
             return;
-        } 
+        } else {
+            address_moved_castle_pieces(from_coords);
+        }
+        pawn_to_queen(to_coords);
+
+        std::cout<< "left light castle: " << light_left_castle<<"\n";
+        std::cout<< "right light castle: " << light_right_castle<<"\n";
+        std::cout<< "left dark castle: " << dark_left_castle<<"\n";
+        std::cout<< "right dark castle: " << dark_right_castle<<"\n";
+
+
+
         desitination_square.piece->piece.setPosition(sf::Vector2f((desitination_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, (desitination_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
         is_light_turn = !is_light_turn;
         if (is_light_turn) {
@@ -223,5 +247,55 @@ namespace chess_game {
         std::cout<< "not check\n";
         possible_moves.clear();
          return false;
+    }
+
+    void Game::pawn_to_queen(std::pair<int,int> new_coords) {
+        Square& curr_square = chess_board[new_coords.first][new_coords.second];
+        //check if pawn 
+        if (curr_square.piece && dynamic_cast<Pawn*>(curr_square.piece.get())) {
+            //check dark pawn reach end
+            if (new_coords.second == 0 && !curr_square.piece->is_light) {
+                std::cout<<"this is a DARK piece to be queened\n";
+                curr_square.piece = std::make_unique<Queen>(false);
+
+                //check dark pawn reach end
+            } else if (new_coords.second == 7 && curr_square.piece->is_light) {
+                std::cout<<"this is a LIGHT piece to be queened\n";
+                curr_square.piece = std::make_unique<Queen>(true);
+            }
+        }  
+    }
+
+    bool Game::check_for_castle(std::pair<int,int> selected_piece) {
+        std::cout<<"not castle\n";
+        Square& selected_square = chess_board[selected_piece.first][selected_piece.second];
+        
+        // check if king in selected square
+        if (selected_square.piece && dynamic_cast<King*>(selected_square.piece.get())) {
+            // if (selected_square.piece->is_light && light_left_castle)
+        }
+        return false;
+    }
+
+    void Game::address_moved_castle_pieces(std::pair<int,int> from_coords) {
+        if (from_coords.second == 0) {
+            if(from_coords.first == 4) {
+                light_left_castle = false;
+                light_right_castle = false;
+            } else if (from_coords.first == 0) {
+                light_left_castle = false;
+            } else if (from_coords.first == 7) {
+                light_right_castle = false;
+            }
+        } else if (from_coords.second == 7) {
+            if(from_coords.first == 4) {
+                dark_left_castle = false;
+                dark_right_castle = false;
+            } else if (from_coords.first == 0) {
+                dark_left_castle = false;
+            } else if (from_coords.first == 7) {
+                dark_right_castle = false;
+            }
+        }
     }
 }

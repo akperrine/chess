@@ -5,6 +5,7 @@
 #include "piece.hpp"
 #include "square.hpp"
 #include "pawn.hpp"
+#include "rook.hpp"
 #include "king.hpp"
 #include "queen.hpp"
 
@@ -25,8 +26,10 @@ public :
 private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void move_piece(std::pair<int,int> from_square, std::pair<int,int> to_square);
-    void undo_move();
     bool check_if_check();
+    void pawn_to_queen(std::pair<int,int> new_pieces_square);
+    bool check_for_castle(std::pair<int,int> selected_piece);
+    void address_moved_castle_pieces(std::pair<int,int> from_coords);
 
     sf::Color color_one;
     sf::Color color_two;
@@ -40,6 +43,10 @@ private :
     bool is_dark_check;
     bool is_game_over;
     std::pair<int,int> selected_piece;
+    bool light_left_castle;
+    bool light_right_castle;
+    bool dark_left_castle;
+    bool dark_right_castle;
 };
 } // chess_game
 
