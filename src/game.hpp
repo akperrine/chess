@@ -6,6 +6,7 @@
 #include "square.hpp"
 #include "pawn.hpp"
 #include "king.hpp"
+#include "queen.hpp"
 
 
 namespace chess_game {

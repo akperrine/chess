@@ -15,19 +15,23 @@ namespace chess_game {
         turn_text.setPosition(275.f, 30.f);
         is_light_turn = false;
 
-        // initiate light pawns on board
+        // initialize light pawns on board
         for (int i = 0; i < 8; ++i) {
             chess_board[i][1].piece = std::make_unique<Pawn>(true);
         }
         chess_board[0][2].piece = std::make_unique<Pawn>(false);
 
-        //initiate dark pawns on board
+        //initialize dark pawns on board
         for (int i = 0; i < 8; ++i) {
-            chess_board[i][4].piece = std::make_unique<Pawn>(false);  
+            chess_board[i][6].piece = std::make_unique<Pawn>(false);  
         }
-        chess_board[4][3].piece = std::make_unique<King>(false);
+        // initialize kings on board
         chess_board[4][0].piece = std::make_unique<King>(true);
+        chess_board[4][7].piece = std::make_unique<King>(false);
 
+        // initialize queens on board
+        chess_board[3][0].piece = std::make_unique<Queen>(true);
+        chess_board[3][7].piece = std::make_unique<Queen>(false);
     }
 
     bool Game::is_click_on_board(const sf::Event& event) const {
@@ -205,11 +209,10 @@ namespace chess_game {
                 }
             }
         }  
-        std::cout<<"made it past first loop\n";
                 for (auto i : possible_moves) {
                     if(i == king_coords) {
-                    std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
-                    std::cout<<"king coords "<<king_coords.first<<" "<<king_coords.second<<"\n";
+                    // std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
+                    // std::cout<<"king coords "<<king_coords.first<<" "<<king_coords.second<<"\n";
                         std::cout<< "check\n";
                         possible_moves.clear();
                         return true;
