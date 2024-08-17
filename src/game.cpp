@@ -26,6 +26,7 @@ namespace chess_game {
             chess_board[i][4].piece = std::make_unique<Pawn>(false);  
         }
         chess_board[4][3].piece = std::make_unique<King>(false);
+        chess_board[4][0].piece = std::make_unique<King>(true);
 
     }
 
@@ -168,9 +169,9 @@ namespace chess_game {
         Square& desitination_square = chess_board[to_coords.first][to_coords.second];
 
         std::unique_ptr<Piece> backupPiece = std::move(desitination_square.piece);
-        std::cout<< start_square.piece->is_light <<'\n';
+        // std::cout<< start_square.piece->is_light <<'\n';
         desitination_square.piece = std::move(start_square.piece);
-        std::cout<< desitination_square.x << " " << desitination_square.y << "\n";
+        // std::cout<< desitination_square.x << " " << desitination_square.y << "\n";
         // start_square.piece.reset();
         bool is_check = check_if_check();
         if(is_check) {
@@ -196,16 +197,19 @@ namespace chess_game {
                 if (chess_board[i][j].piece && chess_board[i][j].piece->is_light == is_light_turn && dynamic_cast<King*>(chess_board[i][j].piece.get())){
                     king_coords.first = i;
                     king_coords.second = j;
+                    std::cout<<"found the king "<<king_coords.first<<" "<<king_coords.second<<"\n";
                 }
                 if (chess_board[i][j].piece && chess_board[i][j].piece->is_light != is_light_turn) {
                     auto piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
                     possible_moves.insert(possible_moves.end(), piece_moves.begin(),piece_moves.end());
                 }
             }
-         }  
+        }  
+        std::cout<<"made it past first loop\n";
                 for (auto i : possible_moves) {
-                    std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
                     if(i == king_coords) {
+                    std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
+                    std::cout<<"king coords "<<king_coords.first<<" "<<king_coords.second<<"\n";
                         std::cout<< "check\n";
                         possible_moves.clear();
                         return true;
@@ -213,7 +217,7 @@ namespace chess_game {
                     
                 }
 
-                std::cout<< "not check\n";
+        std::cout<< "not check\n";
         possible_moves.clear();
          return false;
     }
