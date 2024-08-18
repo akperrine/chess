@@ -27,9 +27,11 @@ private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void move_piece(std::pair<int,int> from_square, std::pair<int,int> to_square);
     bool check_if_check();
+    bool is_square_attacked(std::pair<int,int> attacked_coords);
     void pawn_to_queen(std::pair<int,int> new_pieces_square);
-    bool check_for_castle(std::pair<int,int> selected_piece);
+    std::vector<std::pair<int, int>> check_for_castle(std::pair<int,int> selected_piece);
     void check_moved_castle_pieces(std::pair<int,int> from_coords);
+    bool is_castle_position_attack(std::pair<int,int> rook_coords, bool is_light);
 
     sf::Color color_one;
     sf::Color color_two;
