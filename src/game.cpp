@@ -168,7 +168,9 @@ namespace chess_game {
             }
          }  
 
-        check_for_castle(target_move);
+        std::vector<std::pair<int,int>> castle_moves = check_for_castle(target_move);
+
+
         Square& chosen_square = chess_board[x_square][y_square];
         if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
             chess_board[x_square][y_square].is_selected = true;
@@ -177,6 +179,11 @@ namespace chess_game {
                     // Game::possible_moves.push_back(std::make_pair(x_square, y_square));
                 
             possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
+
+            // add moves for castle
+            for (auto coords : castle_moves) {
+                possible_moves.push_back(coords);
+            }
         }   
         // }
     }
