@@ -190,6 +190,8 @@ namespace chess_game {
 
     void Game::move_piece(std::pair<int,int> from_coords, std::pair<int,int> to_coords) {
         std::cout<< "moving from "<< from_coords.first << " " << from_coords.second << " to " <<to_coords.first << " " << to_coords.second << "\n";
+        
+        if(!move_castle(from_coords, to_coords)) {
 
         Square& start_square = chess_board[from_coords.first][from_coords.second];
         Square& desitination_square = chess_board[to_coords.first][to_coords.second];
@@ -213,10 +215,12 @@ namespace chess_game {
         // std::cout<< "right light castle: " << light_right_castle<<"\n";
         // std::cout<< "left dark castle: " << dark_left_castle<<"\n";
         // std::cout<< "right dark castle: " << dark_right_castle<<"\n";
-
+        
 
 
         desitination_square.piece->piece.setPosition(sf::Vector2f((desitination_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, (desitination_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+        }
+
         is_light_turn = !is_light_turn;
         if (is_light_turn) {
             turn_text.setString("Turn: Light");
@@ -305,6 +309,26 @@ namespace chess_game {
                 curr_square.piece = std::make_unique<Queen>(true);
             }
         }  
+    }
+
+    bool Game::move_castle(std::pair<int,int> first_coords, std::pair<int,int> second_coords) {
+        Square& first_square = chess_board[first_coords.first][first_coords.second];
+        Square& second_square = chess_board[second_coords.first][second_coords.second];
+        // all other castle moves checked during select move phase
+        if (is_light_turn) {
+            if (second_square.piece && second_square.piece->is_light && second_coords.first == 0) {
+                std::cout<<"hit castle";
+                chess_board[1][0].piece = std::move(first_square.piece);
+                chess_board[2][0].piece = std::move(second_square.piece); 
+
+                chess_board[1][0].piece->piece.setPosition(sf::Vector2f((chess_board[1][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[1][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+
+                chess_board[2][0].piece->piece.setPosition(sf::Vector2f((chess_board[2][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[2][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+                return true;
+            }
+            return false;
+        }
+        else return false;
     }
 
     std::vector<std::pair<int, int>>  Game::check_for_castle(std::pair<int,int> selected_piece) {

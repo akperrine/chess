@@ -30,6 +30,7 @@ private :
     bool is_square_attacked(std::pair<int,int> attacked_coords);
     void pawn_to_queen(std::pair<int,int> new_pieces_square);
     std::vector<std::pair<int, int>> check_for_castle(std::pair<int,int> selected_piece);
+    bool move_castle(std::pair<int,int> first_coords, std::pair<int,int> second_coords);
     void check_moved_castle_pieces(std::pair<int,int> from_coords);
     bool is_castle_position_attack(std::pair<int,int> rook_coords, bool is_light);
 
@@ -41,7 +42,6 @@ private :
     bool is_light_turn;
     std::vector<std::pair<int, int>> possible_moves;
     std::vector<std::unique_ptr<Pawn>> pawns;
-    bool is_light_check;
     bool is_dark_check;
     bool is_game_over;
     std::pair<int,int> selected_piece;
