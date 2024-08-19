@@ -33,6 +33,8 @@ private :
     bool move_castle(std::pair<int,int> first_coords, std::pair<int,int> second_coords);
     void check_moved_castle_pieces(std::pair<int,int> from_coords);
     bool is_castle_position_attack(std::pair<int,int> rook_coords, bool is_light);
+    void set_board_draw_position(sf::Transformable& transformable, int x, int y);
+    void move_piece_to_square(Square& from_square, Square& to_square);
 
     sf::Color color_one;
     sf::Color color_two;

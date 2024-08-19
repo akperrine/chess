@@ -199,12 +199,15 @@ namespace chess_game {
         std::unique_ptr<Piece> backupPiece = std::move(desitination_square.piece);
         // std::cout<< start_square.piece->is_light <<'\n';
         desitination_square.piece = std::move(start_square.piece);
+        // move_piece_to_square(start_square, desitination_square);
+
         // std::cout<< desitination_square.x << " " << desitination_square.y << "\n";
         // start_square.piece.reset();
         bool is_check = check_if_check();
         if(is_check) {
             start_square.piece = std::move(desitination_square.piece);
             desitination_square.piece = std::move(backupPiece);
+            
             return;
         } else {
             check_moved_castle_pieces(from_coords);
@@ -228,6 +231,17 @@ namespace chess_game {
             turn_text.setString("Turn: Dark");
         }
     }
+
+    void Game::move_piece_to_square(Square& from_square, Square& to_square) {
+         if (from_square.piece) {
+            to_square.piece = std::move(from_square.piece);
+
+            to_square.piece->piece.setPosition(sf::Vector2f(
+            (to_square.x * SQUARE_LENGTH) + X_OFFSET_DRAW, 
+            (to_square.y * SQUARE_LENGTH) + Y_OFFSET_DRAW
+            ));
+        }
+    };
 
     bool Game::check_if_check() {
         std::pair<int,int> king_coords;
@@ -318,14 +332,24 @@ namespace chess_game {
         if (is_light_turn) {
             if (second_square.piece && second_square.piece->is_light && second_coords.first == 0) {
                 std::cout<<"hit castle";
-                chess_board[1][0].piece = std::move(first_square.piece);
-                chess_board[2][0].piece = std::move(second_square.piece); 
+                move_piece_to_square(first_square, chess_board[1][0]);
+                move_piece_to_square(second_square, chess_board[2][0]);
 
-                chess_board[1][0].piece->piece.setPosition(sf::Vector2f((chess_board[1][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[1][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+                // chess_board[1][0].piece = std::move(first_square.piece);
+                // chess_board[2][0].piece = std::move(second_square.piece); 
 
-                chess_board[2][0].piece->piece.setPosition(sf::Vector2f((chess_board[2][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[2][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+                // // refactor this to it's own 
+                // chess_board[1][0].piece->piece.setPosition(sf::Vector2f((chess_board[1][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[1][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+
+                // chess_board[2][0].piece->piece.setPosition(sf::Vector2f((chess_board[2][0].x * SQUARE_LENGTH) + X_OFFSET_DRAW, (chess_board[2][0].y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
+                return true;
+            } else if (second_square.piece && second_square.piece->is_light && second_coords.first == 7) {
+                move_piece_to_square(first_square, chess_board[6][0]);
+                move_piece_to_square(second_square, chess_board[5][0]);
+
                 return true;
             }
+            
             return false;
         }
         else return false;
@@ -353,8 +377,13 @@ namespace chess_game {
                 }
             }
             if (selected_square.piece->is_light && light_right_castle) {
-                if(!chess_board[0][5].piece || !chess_board[0][6].piece) {
-                    std::cout<< "viable light right castle\n";
+                if (!chess_board[5][0].piece && is_square_attacked(std::make_pair(5,0))){
+                    std::cout<<"is open and not attack2\n";
+                } else if (!chess_board[6][0].piece && is_square_attacked(std::make_pair(6,0))) {
+                    std::cout<<"is open and not attack3\n";
+                } else {
+                    std::cout<< "viable light left castle\n";
+                    castle_positions.push_back(std::make_pair(7,0));
                 }
             }
             if (!selected_square.piece->is_light && dark_left_castle) {
@@ -396,5 +425,9 @@ namespace chess_game {
 
     bool Game::is_castle_position_attack(std::pair<int,int> rook_coords, bool is_light) {
         return true;
+    }
+
+    void Game::set_board_draw_position(sf::Transformable& transformable, int x, int y) {
+        transformable.setPosition(sf::Vector2f((x * SQUARE_LENGTH) + X_OFFSET_DRAW, (y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
     }
 }
