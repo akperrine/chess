@@ -13,11 +13,18 @@ namespace chess_game {
         turn_text.setStyle(sf::Text::Regular);
         turn_text.setFillColor(sf::Color::White);
         turn_text.setPosition(275.f, 30.f);
+        game_over_text.setFont(font);
+        game_over_text.setCharacterSize(30);
+        game_over_text.setStyle(sf::Text::Regular);
+        game_over_text.setFillColor(sf::Color::White);
+        game_over_text.setPosition(275.f, 30.f);
         is_light_turn = false;
         light_left_castle = true;
         light_right_castle = true;
         dark_left_castle = true;
         dark_right_castle = true;
+        is_game_over = false;
+        is_light_won = true;
 
         // initialize light pawns on board
         // for (int i = 0; i < 8; ++i) {
@@ -94,10 +101,12 @@ namespace chess_game {
 
      
 
-
-        target.draw(turn_text);
-
-        
+        if(is_game_over) {
+           
+            target.draw(game_over_text);
+        } else {
+            target.draw(turn_text);
+        }
     }
     
 
@@ -130,62 +139,64 @@ namespace chess_game {
     }
 
     void Game::select_piece(int x_cord, int y_cord) {
-        int x_square = (x_cord - X_OFFSET_DRAW) / SQUARE_LENGTH;
-        int y_square = (y_cord - Y_OFFSET_DRAW) / SQUARE_LENGTH;
+        if (!is_game_over) {
 
-        std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
-        
-        // needs to be refactored
-        std::pair<int,int> selected;
-         for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {  
-                if(chess_board[i][j].is_selected) {
-                    selected.first = i;
-                    selected.second = j;
+            int x_square = (x_cord - X_OFFSET_DRAW) / SQUARE_LENGTH;
+            int y_square = (y_cord - Y_OFFSET_DRAW) / SQUARE_LENGTH;
+
+            std::cout << "x cord: " << x_square << ", y cord: " << y_square << "\n";
+            
+            // needs to be refactored
+            std::pair<int,int> selected;
+            for (int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {  
+                    if(chess_board[i][j].is_selected) {
+                        selected.first = i;
+                        selected.second = j;
+                    }
                 }
+            }  
+            
+            std::pair<int, int> target_move = {x_square, y_square};
+            auto movable_square = std::find(possible_moves.begin(), possible_moves.end(), target_move);
+            if(movable_square != possible_moves.end()) {
+                std::cout<< "found move\n";
+                move_piece(selected, target_move);
+
+                possible_moves.clear();
+            for (int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    chess_board[i][j].is_selected = false;
+                }
+            }  
             }
-         }  
-        
-        std::pair<int, int> target_move = {x_square, y_square};
-        auto movable_square = std::find(possible_moves.begin(), possible_moves.end(), target_move);
-        if(movable_square != possible_moves.end()) {
-            std::cout<< "found move\n";
-            move_piece(selected, target_move);
+            //  else {
 
             possible_moves.clear();
-         for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                chess_board[i][j].is_selected = false;
-            }
-         }  
-        }
-        //  else {
+            for (int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    chess_board[i][j].is_selected = false;
+                }
+            }  
 
-        possible_moves.clear();
-         for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                chess_board[i][j].is_selected = false;
-            }
-         }  
-
-        std::vector<std::pair<int,int>> castle_moves = check_for_castle(target_move);
+            std::vector<std::pair<int,int>> castle_moves = check_for_castle(target_move);
 
 
-        Square& chosen_square = chess_board[x_square][y_square];
-        if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
-            chess_board[x_square][y_square].is_selected = true;
-            
-                    std::cout<< "this is possible \n";
-                    // Game::possible_moves.push_back(std::make_pair(x_square, y_square));
+            Square& chosen_square = chess_board[x_square][y_square];
+            if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
+                chess_board[x_square][y_square].is_selected = true;
                 
-            possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
+                        std::cout<< "this is possible \n";
+                        // Game::possible_moves.push_back(std::make_pair(x_square, y_square));
+                    
+                possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
 
-            // add moves for castle
-            for (auto coords : castle_moves) {
-                possible_moves.push_back(coords);
-            }
-        }   
-        // }
+                // add moves for castle
+                for (auto coords : castle_moves) {
+                    possible_moves.push_back(coords);
+                }
+            }   
+        }
     }
 
     void Game::move_piece(std::pair<int,int> from_coords, std::pair<int,int> to_coords) {
@@ -230,6 +241,13 @@ namespace chess_game {
         } else {
             turn_text.setString("Turn: Dark");
         }
+        is_game_over = true;
+        is_light_won = false;
+        if (is_light_won) {
+                game_over_text.setString("Light WINS!!!!!");
+            } else {
+                game_over_text.setString("DARK WINs!!!!");
+            }
     }
 
     void Game::move_piece_to_square(Square& from_square, Square& to_square) {
@@ -423,7 +441,7 @@ namespace chess_game {
             }
         }
     }
-    
+
     void Game::set_board_draw_position(sf::Transformable& transformable, int x, int y) {
         transformable.setPosition(sf::Vector2f((x * SQUARE_LENGTH) + X_OFFSET_DRAW, (y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
     }

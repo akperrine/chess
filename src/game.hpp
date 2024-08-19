@@ -40,11 +40,13 @@ private :
     Square chess_board[8][8];
     sf::Font font;
     sf::Text turn_text;
+    sf::Text game_over_text;
     bool is_light_turn;
     std::vector<std::pair<int, int>> possible_moves;
     std::vector<std::unique_ptr<Pawn>> pawns;
     bool is_dark_check;
     bool is_game_over;
+    bool is_light_won;
     std::pair<int,int> selected_piece;
     bool light_left_castle;
     bool light_right_castle;
