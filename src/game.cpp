@@ -423,11 +423,7 @@ namespace chess_game {
             }
         }
     }
-
-    bool Game::is_castle_position_attack(std::pair<int,int> rook_coords, bool is_light) {
-        return true;
-    }
-
+    
     void Game::set_board_draw_position(sf::Transformable& transformable, int x, int y) {
         transformable.setPosition(sf::Vector2f((x * SQUARE_LENGTH) + X_OFFSET_DRAW, (y * SQUARE_LENGTH) + Y_OFFSET_DRAW));
     }
