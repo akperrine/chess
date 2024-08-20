@@ -27,6 +27,7 @@ private :
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void move_piece(std::pair<int,int> from_square, std::pair<int,int> to_square);
     bool check_if_check();
+    bool check_if_check_mate();
     bool is_square_attacked(std::pair<int,int> attacked_coords);
     void pawn_to_queen(std::pair<int,int> new_pieces_square);
     std::vector<std::pair<int, int>> check_for_castle(std::pair<int,int> selected_piece);
@@ -34,6 +35,7 @@ private :
     void check_moved_castle_pieces(std::pair<int,int> from_coords);
     void set_board_draw_position(sf::Transformable& transformable, int x, int y);
     void move_piece_to_square(Square& from_square, Square& to_square);
+    std::pair<int,int> get_turns_king_coords();
 
     sf::Color color_one;
     sf::Color color_two;

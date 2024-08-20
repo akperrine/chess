@@ -241,8 +241,9 @@ namespace chess_game {
         } else {
             turn_text.setString("Turn: Dark");
         }
-        is_game_over = true;
-        is_light_won = false;
+
+        is_game_over = check_if_check_mate(); 
+
         if (is_light_won) {
                 game_over_text.setString("Light WINS!!!!!");
             } else {
@@ -262,6 +263,33 @@ namespace chess_game {
     };
 
     bool Game::check_if_check() {
+        std::pair<int,int> king_coords = get_turns_king_coords();
+        possible_moves.clear();
+
+        // for (int i = 0; i < 8; i++) {
+        //     for(int j = 0; j < 8; j++) {
+        //         if (chess_board[i][j].piece && chess_board[i][j].piece->is_light == is_light_turn && dynamic_cast<King*>(chess_board[i][j].piece.get())){
+        //             king_coords.first = i;
+        //             king_coords.second = j;
+        //             // std::cout<<"found the king "<<king_coords.first<<" "<<king_coords.second<<"\n";
+        //         }
+        //     }
+        // }
+
+        return is_square_attacked(king_coords);
+    }
+
+    bool Game::check_if_check_mate() {
+        if (check_if_check()) {
+            std::pair<int,int> king_coords = get_turns_king_coords();
+            possible_moves.clear();
+            std::cout<< "is in check. Could be check mate\n";
+        } 
+
+        return false;
+    }
+
+    std::pair<int,int> Game::get_turns_king_coords() {
         std::pair<int,int> king_coords;
         possible_moves.clear();
 
@@ -274,8 +302,7 @@ namespace chess_game {
                 }
             }
         }
-
-        return is_square_attacked(king_coords);
+        return king_coords;
     }
 
     bool Game::is_square_attacked(std::pair<int,int> attacked_coords) {
