@@ -24,7 +24,7 @@ namespace chess_game {
 
     std::vector<std::pair<int, int>> King::get_moves(Square board[8][8], int x, int y)  {
         std::vector<std::pair<int, int>> moves = std::vector<std::pair<int, int>>();
-            std::cout<<"checking king "<< is_light<< "\n";
+            // std::cout<<"checking king "<< is_light<< "\n";
             // found this idea that was way more clever than my switch statement
             int x_dirs[8] = {0, 1, 1, 1, 0, -1, -1, -1};
             int y_dirs[8] = {1, 1, 0, -1, -1, -1, 0, 1};

@@ -38,7 +38,8 @@ namespace chess_game {
         // testing pawns
         chess_board[1][6].piece = std::make_unique<Pawn>(true);
         chess_board[6][2].piece = std::make_unique<Pawn>(false);
-        chess_board[2][3].piece = std::make_unique<Queen>(false);
+        chess_board[3][2].piece = std::make_unique<Queen>(false);
+        chess_board[7][1].piece = std::make_unique<Queen>(false);
 
         // initialize rooks on board
         chess_board[0][0].piece = std::make_unique<Rook>(true);
@@ -64,7 +65,6 @@ namespace chess_game {
     }
 
     void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        // std::cout << "drawing\n";
         target.clear();
         sf::RectangleShape selected_square;
         int x_pos, y_pos;
@@ -160,7 +160,7 @@ namespace chess_game {
             std::pair<int, int> target_move = {x_square, y_square};
             auto movable_square = std::find(possible_moves.begin(), possible_moves.end(), target_move);
             if(movable_square != possible_moves.end()) {
-                std::cout<< "found move\n";
+                // std::cout<< "found move\n";
                 move_piece(selected, target_move);
 
                 possible_moves.clear();
@@ -186,7 +186,7 @@ namespace chess_game {
             if (chosen_square.piece && chosen_square.piece->is_light == is_light_turn) {
                 chess_board[x_square][y_square].is_selected = true;
                 
-                        std::cout<< "this is possible \n";
+                        // std::cout<< "this is possible \n";
                         // Game::possible_moves.push_back(std::make_pair(x_square, y_square));
                     
                 possible_moves = chess_board[x_square][y_square].piece->get_moves(chess_board, x_square, y_square);
@@ -200,7 +200,7 @@ namespace chess_game {
     }
 
     void Game::move_piece(std::pair<int,int> from_coords, std::pair<int,int> to_coords) {
-        std::cout<< "moving from "<< from_coords.first << " " << from_coords.second << " to " <<to_coords.first << " " << to_coords.second << "\n";
+        // std::cout<< "moving from "<< from_coords.first << " " << from_coords.second << " to " <<to_coords.first << " " << to_coords.second << "\n";
         
         if(!move_castle(from_coords, to_coords)) {
 
@@ -224,11 +224,6 @@ namespace chess_game {
             check_moved_castle_pieces(from_coords);
         }
         pawn_to_queen(to_coords);
-
-        // std::cout<< "left light castle: " << light_left_castle<<"\n";
-        // std::cout<< "right light castle: " << light_right_castle<<"\n";
-        // std::cout<< "left dark castle: " << dark_left_castle<<"\n";
-        // std::cout<< "right dark castle: " << dark_right_castle<<"\n";
         
 
 
@@ -282,8 +277,63 @@ namespace chess_game {
     bool Game::check_if_check_mate() {
         if (check_if_check()) {
             std::pair<int,int> king_coords = get_turns_king_coords();
-            possible_moves.clear();
+            if (chess_board[king_coords.first][king_coords.second].piece) {
+                std::vector<std::pair<int,int>> possible_opponent_moves = get_possible_moves(false);
+
+                std::vector<std::pair<int,int>> possible_king_moves = chess_board[king_coords.first][king_coords.second].piece->get_moves(chess_board, king_coords.first, king_coords.second);
+                for (auto move : possible_king_moves) {
+                    // std::cout<<"found the king options "<<move.first<<" "<<move.second<<"\n"; 
+                    
+                    std::unique_ptr<Piece> tempPiece = std::move(chess_board[move.first][move.second].piece);
+                     chess_board[move.first][move.second].piece = std::move(chess_board[king_coords.first][king_coords.second].piece);
+                    bool king_move_attacked = is_square_attacked(move);
+                        chess_board[king_coords.first][king_coords.second].piece = std::move(chess_board[move.first][move.second].piece);
+                        chess_board[move.first][move.second].piece = std::move(tempPiece);
+                    if (!king_move_attacked) {
+                        std::cout<<" not attack, check mate = false ***** "<<move.first<<" "<<move.second<<"\n"; 
+                        return false;
+                    } 
+        // move_piece_to_square(start_square, desitination_square);
+                }
+
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        if(chess_board[i][j].piece && chess_board[i][j].piece->is_light == is_light_turn) {
+                            std::cout<<" coords of checking piece "<< i<<j<<"\n";
+                            std::vector<std::pair<int,int>> piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
+
+                            for (auto move : piece_moves) {
+                                   std::unique_ptr<Piece> tempPiece = std::move(chess_board[move.first][move.second].piece);
+                                    chess_board[move.first][move.second].piece = std::move(chess_board[i][j].piece);
+                                    bool piece_attacked = is_square_attacked(move);
+                                        chess_board[i][j].piece = std::move(chess_board[move.first][move.second].piece);
+                                        chess_board[move.first][move.second].piece = std::move(tempPiece);
+                                    if (!piece_attacked) {
+                                        std::cout<<" not attack, check mate = false ***** "<<move.first<<" "<<move.second<<"\n"; 
+                                        return false;
+                                    } 
+                            }
+                          
+
+                        }
+                        // is_square_attacked(king_coords);
+                    }
+                }
+
+                return true;
+            }
+
             std::cout<< "is in check. Could be check mate\n";
+            
+            for (int i = 0; i < 8; i++) {
+                for(int j = 0; j < 8; j++) {
+                    if (chess_board[i][j].piece && chess_board[i][j].piece->is_light == is_light_turn && dynamic_cast<King*>(chess_board[i][j].piece.get())){
+                    king_coords.first = i;
+                    king_coords.second = j;
+                        // std::cout<<"found the king "<<king_coords.first<<" "<<king_coords.second<<"\n";
+                    }
+                }
+            }
         } 
 
         return false;
@@ -306,14 +356,16 @@ namespace chess_game {
     }
 
     bool Game::is_square_attacked(std::pair<int,int> attacked_coords) {
-          for (int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                if (chess_board[i][j].piece && chess_board[i][j].piece->is_light != is_light_turn) {
-                    auto piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
-                    possible_moves.insert(possible_moves.end(), piece_moves.begin(),piece_moves.end());
-                }
-            }
-        }  
+        
+         possible_moves = get_possible_moves(false);
+        //   for (int i = 0; i < 8; i++) {
+        //     for(int j = 0; j < 8; j++) {
+        //         if (chess_board[i][j].piece && chess_board[i][j].piece->is_light != is_light_turn) {
+        //             auto piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
+        //             possible_moves.insert(possible_moves.end(), piece_moves.begin(),piece_moves.end());
+        //         }
+        //     }
+        // }  
         
         for (auto i : possible_moves) {
             if(i == attacked_coords) {
@@ -330,18 +382,32 @@ namespace chess_game {
          return false;
     }
 
+    std::vector<std::pair<int,int>> Game::get_possible_moves(bool same_color) {
+        std::vector<std::pair<int,int>> moves_to_return;
+        for (int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                if (chess_board[i][j].piece && (same_color == (chess_board[i][j].piece->is_light == is_light_turn))) {
+                    auto piece_moves = chess_board[i][j].piece->get_moves(chess_board, i, j);
+                    moves_to_return.insert(moves_to_return.end(), piece_moves.begin(),piece_moves.end());
+                }
+            }
+        } 
+        return moves_to_return;
+    }
+
+
     void Game::pawn_to_queen(std::pair<int,int> new_coords) {
         Square& curr_square = chess_board[new_coords.first][new_coords.second];
         //check if pawn 
         if (curr_square.piece && dynamic_cast<Pawn*>(curr_square.piece.get())) {
             //check dark pawn reach end
             if (new_coords.second == 0 && !curr_square.piece->is_light) {
-                std::cout<<"this is a DARK piece to be queened\n";
+                // std::cout<<"this is a DARK piece to be queened\n";
                 curr_square.piece = std::make_unique<Queen>(false);
 
                 //check dark pawn reach end
             } else if (new_coords.second == 7 && curr_square.piece->is_light) {
-                std::cout<<"this is a LIGHT piece to be queened\n";
+                // std::cout<<"this is a LIGHT piece to be queened\n";
                 curr_square.piece = std::make_unique<Queen>(true);
             }
         }  
@@ -353,7 +419,7 @@ namespace chess_game {
         // all other castle moves checked during select move phase
         if (is_light_turn) {
             if (second_square.piece && second_square.piece->is_light && second_coords.first == 0) {
-                std::cout<<"hit castle";
+                // std::cout<<"hit castle";
                 move_piece_to_square(first_square, chess_board[1][0]);
                 move_piece_to_square(second_square, chess_board[2][0]);
 
@@ -373,7 +439,7 @@ namespace chess_game {
             }
         } else {
             if (second_square.piece && !second_square.piece->is_light && second_coords.first == 0) {
-                std::cout<<"hit castle";
+                // std::cout<<"hit castle";
                 move_piece_to_square(first_square, chess_board[1][7]);
                 move_piece_to_square(second_square, chess_board[2][7]);
 
@@ -390,7 +456,7 @@ namespace chess_game {
     }
 
     std::vector<std::pair<int, int>>  Game::check_for_castle(std::pair<int,int> selected_piece) {
-        std::cout<<"check castle\n";
+        // std::cout<<"check castle\n";
         std::vector<std::pair<int, int>> castle_positions;
         Square& selected_square = chess_board[selected_piece.first][selected_piece.second];
         
@@ -398,13 +464,9 @@ namespace chess_game {
         if (selected_square.piece && dynamic_cast<King*>(selected_square.piece.get())) {
             if (selected_square.piece->is_light && light_left_castle) {
             std::cout<<"is King\n";
-                // return true;
                 if(chess_board[3][0].piece || is_square_attacked(std::make_pair(3,0))) {
-                    std::cout<<"is open and not attack\n";   
                 } else if (!chess_board[2][0].piece && is_square_attacked(std::make_pair(2,0))){
-                    std::cout<<"is open and not attack2\n";
                 } else if (!chess_board[1][0].piece && is_square_attacked(std::make_pair(1,0))) {
-                    std::cout<<"is open and not attack3\n";
                 } else {
                     std::cout<< "viable light left castle\n";
                     castle_positions.push_back(std::make_pair(0,0));
@@ -412,9 +474,7 @@ namespace chess_game {
             }
             if (selected_square.piece->is_light && light_right_castle) {
                 if (!chess_board[5][0].piece && is_square_attacked(std::make_pair(5,0))){
-                    std::cout<<"is open and not attack2\n";
                 } else if (!chess_board[6][0].piece && is_square_attacked(std::make_pair(6,0))) {
-                    std::cout<<"is open and not attack3\n";
                 } else {
                     std::cout<< "viable light left castle\n";
                     castle_positions.push_back(std::make_pair(7,0));
@@ -422,11 +482,8 @@ namespace chess_game {
             }
             if (!selected_square.piece->is_light && dark_left_castle) {
                  if(chess_board[3][7].piece || is_square_attacked(std::make_pair(3,7))) {
-                    std::cout<<"is open and not attack\n";   
                 } else if (!chess_board[2][7].piece && is_square_attacked(std::make_pair(2,7))){
-                    std::cout<<"is open and not attack2\n";
                 } else if (!chess_board[1][7].piece && is_square_attacked(std::make_pair(1,7))) {
-                    std::cout<<"is open and not attack3\n";
                 } else {
                     std::cout<< "viable light left castle\n";
                     castle_positions.push_back(std::make_pair(0,7));
@@ -434,16 +491,12 @@ namespace chess_game {
             }
             if (!selected_square.piece->is_light && dark_right_castle) {
                 if (!chess_board[5][7].piece && is_square_attacked(std::make_pair(5,7))){
-                    std::cout<<"is open and not attack2\n";
                 } else if (!chess_board[6][7].piece && is_square_attacked(std::make_pair(6,7))) {
-                    std::cout<<"is open and not attack3\n";
                 } else {
-                    std::cout<< "viable light left castle\n";
                     castle_positions.push_back(std::make_pair(7,7));
                 }
             }
         }
-        std::cout<< castle_positions.size()<< "castle vec size\n";
         return castle_positions;
     }
 

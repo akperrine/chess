@@ -36,6 +36,7 @@ private :
     void set_board_draw_position(sf::Transformable& transformable, int x, int y);
     void move_piece_to_square(Square& from_square, Square& to_square);
     std::pair<int,int> get_turns_king_coords();
+    std::vector<std::pair<int,int>> get_possible_moves(bool same_color);
 
     sf::Color color_one;
     sf::Color color_two;
