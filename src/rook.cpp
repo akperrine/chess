@@ -23,38 +23,27 @@ namespace chess_game {
 
     std::vector<std::pair<int, int>> Rook::get_moves(Square board[8][8], int x, int y)  {
         std::vector<std::pair<int, int>> moves = std::vector<std::pair<int, int>>();
-        if (is_light && y != 7) {
-            std::cout<<"making it here\n";
-            if (y == 1) {
-                if(!board[x][y+2].piece && !board[x][y+1].piece) {
-                 moves.push_back(std::make_pair(x, y+2));
+        int x_dirs[8] = {0, 1, 0, -1};
+        int y_dirs[8] = {1, 0, -1, 0};
+
+            for (int i = 0; i < 8; i++) {
+                int a = x + x_dirs[i];
+                int b = y + y_dirs[i];
+
+                
+                while (a >= 0 && a <= 7 && b >= 0 && b <= 7) {
+                    if (board[a][b].piece) {
+                        if(board[a][b].piece->is_light != is_light) {
+                            moves.push_back(std::make_pair(a, b));
+                        }
+                        break;
+                    } else {
+                        moves.push_back(std::make_pair(a, b));
+                    }
+                    a += (1 * x_dirs[i]);
+                    b += (1 * y_dirs[i]);
                 }
             }
-            if(!board[x][y+1].piece) {
-                moves.push_back(std::make_pair(x, y+1));
-            }
-            if(x+1 < 8 && board[x +1][y+1].piece && board[x +1][y+1].piece->is_light == false) {
-                moves.push_back(std::make_pair(x+1, y+1));
-            } 
-            if(x-1 >= 0 && board[x -1][y+1].piece && board[x -1][y+1].piece->is_light == false) {
-                moves.push_back(std::make_pair(x-1, y+1));
-            } 
-        } else if (!is_light) {
-            if (y == 6) {
-                if(!board[x][y-2].piece && !board[x][y-1].piece) {
-                 moves.push_back(std::make_pair(x, y-2));
-                }
-            }
-            if(!board[x][y-1].piece) {
-                moves.push_back(std::make_pair(x, y-1));
-            }
-            if(x+1 < 8 && board[x +1][y-1].piece && board[x +1][y-1].piece->is_light == true) {
-                moves.push_back(std::make_pair(x+1, y-1));
-            } 
-            if(x-1 >= 0 && board[x -1][y-1].piece && board[x -1][y-1].piece->is_light == true) {
-                moves.push_back(std::make_pair(x-1, y-1));
-            } 
-        }
         return moves;
     }
 
