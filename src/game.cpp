@@ -287,10 +287,11 @@ namespace chess_game {
                     std::unique_ptr<Piece> tempPiece = std::move(chess_board[move.first][move.second].piece);
                      chess_board[move.first][move.second].piece = std::move(chess_board[king_coords.first][king_coords.second].piece);
                     bool king_move_attacked = is_square_attacked(move);
+                    
                         chess_board[king_coords.first][king_coords.second].piece = std::move(chess_board[move.first][move.second].piece);
                         chess_board[move.first][move.second].piece = std::move(tempPiece);
                     if (!king_move_attacked) {
-                        std::cout<<" not attack, check mate = false ***** "<<move.first<<" "<<move.second<<"\n"; 
+                        std::cout<<" not attack, check mate proven in king moves = false ***** "<<move.first<<" "<<move.second<<"\n"; 
                         return false;
                     } 
         // move_piece_to_square(start_square, desitination_square);
@@ -305,7 +306,9 @@ namespace chess_game {
                             for (auto move : piece_moves) {
                                    std::unique_ptr<Piece> tempPiece = std::move(chess_board[move.first][move.second].piece);
                                     chess_board[move.first][move.second].piece = std::move(chess_board[i][j].piece);
-                                    bool piece_attacked = is_square_attacked(move);
+                                    // bool piece_attacked = is_square_attacked(king_coords);
+                                    bool piece_attacked = check_if_check();
+                                    std::cout<<"is king still attacked "<<piece_attacked<<"\n";
                                         chess_board[i][j].piece = std::move(chess_board[move.first][move.second].piece);
                                         chess_board[move.first][move.second].piece = std::move(tempPiece);
                                     if (!piece_attacked) {
@@ -358,6 +361,7 @@ namespace chess_game {
     bool Game::is_square_attacked(std::pair<int,int> attacked_coords) {
         
          possible_moves = get_possible_moves(false);
+        //  
         //   for (int i = 0; i < 8; i++) {
         //     for(int j = 0; j < 8; j++) {
         //         if (chess_board[i][j].piece && chess_board[i][j].piece->is_light != is_light_turn) {
@@ -366,18 +370,18 @@ namespace chess_game {
         //         }
         //     }
         // }  
-        
+        std::cout<< "attccked coords "<<attacked_coords.first<< " " << attacked_coords.second<< "\n";
         for (auto i : possible_moves) {
-            if(i == attacked_coords) {
-            // std::cout<< "x " <<i.first <<" y " << i.second<< '\n';
+            // std::cout<< "x move" <<i.first <<" y move" << i.second<< '\n';
             // std::cout<<"king coords "<<attacked_coords.first<<" "<<attacked_coords.second<<"\n";
+            if(i == attacked_coords) {
                 // std::cout<< "check\n";
                 possible_moves.clear();
                 return true;
             }
         }
 
-        std::cout<< "not check\n";
+        // std::cout<< "not check\n";
         possible_moves.clear();
          return false;
     }
