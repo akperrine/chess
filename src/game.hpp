@@ -9,6 +9,7 @@
 #include "king.hpp"
 #include "queen.hpp"
 #include "bishop.hpp"
+#include "knight.hpp"
 
 
 namespace chess_game {
