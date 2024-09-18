@@ -8,6 +8,7 @@
 #include "rook.hpp"
 #include "king.hpp"
 #include "queen.hpp"
+#include "bishop.hpp"
 
 
 namespace chess_game {

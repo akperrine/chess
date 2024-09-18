@@ -47,6 +47,13 @@ namespace chess_game {
         chess_board[0][7].piece = std::make_unique<Rook>(false);
         chess_board[7][7].piece = std::make_unique<Rook>(false);
 
+         // initialize bishops on board
+        chess_board[2][0].piece = std::make_unique<Bishop>(true);
+        chess_board[5][0].piece = std::make_unique<Bishop>(true);
+        chess_board[2][7].piece = std::make_unique<Bishop>(false);
+        chess_board[5][7].piece = std::make_unique<Bishop>(false);
+
+
         // initialize kings on board
         chess_board[4][0].piece = std::make_unique<King>(true);
         chess_board[4][7].piece = std::make_unique<King>(false);
